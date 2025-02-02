@@ -1,0 +1,89 @@
+<h1 class="text-center">Liste des produits</h1>
+
+<p-button label="Créer produit" (onClick)="onCreate()" class="block text-center"/>
+<div class="card">
+<p-dataView #dv [value]="products()" [rows]="5" [paginator]="true"   [sortField]="sortField" [sortOrder]="sortOrder">
+    <ng-template pTemplate="header">
+        <div class="flex flex-column md:flex-row md:justify-content-between">
+            <p-dropdown [options]="sortOptions"  placeholder="Sort By Price" (onChange)="onSortChange($event)" styleClass="mb-2 md:mb-0" />
+        </div>
+    </ng-template>
+    <ng-template pTemplate="list" let-products>
+        
+        <div class="grid grid-cols-12 gap-4 grid-nogutter">
+          
+            <div class="col-span-12 border-gray-300" *ngFor="let product of products; let first = first" >
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
+                    [ngClass]="{ 'border-top-1 surface-border': !first }">
+        
+                    <div class="md:w-40 relative">
+                        <img
+                            class="block xl:block mx-auto rounded-border w-full"
+                            [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
+                            [alt]="product.name"
+                        />
+                        <p-tag
+                            [value]="product.inventoryStatus"
+                            [severity]="getSeverity(product)"
+                            class="absolute"
+                            styleClass="dark:!bg-surface-900"
+                            [style.left.px]="4"
+                            [style.top.px]="4"
+                        />
+                    </div>
+                    <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                        <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                            <div>
+                                <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
+                                <div class="text-lg font-medium text-surface-900 dark:text-surface-0 mt-2">{{ product.name }}</div>
+                            </div>
+                            <div class="bg-surface-100 dark:bg-surface-700 p-1" style="border-radius: 30px">
+                                <div
+                                    class="bg-surface-0 dark:bg-surface-900 flex items-center gap-2 justify-center py-1 px-2"
+                                    style="border-radius: 30px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.06)"
+                                >
+                                    <span class="text-surface-900 dark:text-surface-0 font-medium text-sm">{{
+                                        product.rating
+                                    }}</span>
+                                    <i class="pi pi-star-fill text-yellow-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:items-end gap-8">
+                            <span class="text-xl font-semibold text-surface-900 dark:text-surface-0">{{
+                                '$' + product.price
+                            }}</span>
+                            <div class="flex flex-row-reverse md:flex-row gap-2">
+                             <!-- <ng-template pTemplate="footer"> -->
+                                <p-button
+                                    icon="pi pi-shopping-cart"
+                                    class="flex-auto md:flex-initial whitespace-nowrap"
+                                    [rounded]="true" [outlined]="true" 
+                                    [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"
+                                    (onClick)="addToCart(product)"
+                                />
+    
+                                    <p-button  icon="pi pi-pencil"  class="flex-auto md:flex-initial whitespace-nowrap" [rounded]="true" [outlined]="true" severity="secondary" (onClick)="onUpdate(product)"/>
+                                    <p-button  icon="pi pi-trash" class="flex-auto md:flex-initial whitespace-nowrap" [rounded]="true" [outlined]="true"  severity="danger" (onClick)="onDelete(product)" />
+                            
+                            </div>
+                        </div>
+                    </div>
+               
+                </div>
+            </div>
+        </div>
+           
+    </ng-template>
+</p-dataView>
+</div>
+<p-dialog [(visible)]="isDialogVisible"
+    [style]="{ width: '50vw' }"
+    header="Ajout/Edition produit">
+    <app-product-form
+        [product]="editedProduct()"
+        (save)="onSave($event)"
+        (cancel)="onCancel()"
+    />
+</p-dialog>

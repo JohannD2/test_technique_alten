@@ -1,0 +1,36 @@
+<form  [formGroup]="contactForm" class="styled-form"  >
+    <p-card header="Formulaire" class="form-card m-4 mx-auto">
+        <div class="flex flex-column gap-2">
+        <label for="email" class="form-label">Email</label>
+        <input 
+        pInputText 
+        id="email" 
+        aria-describedby="email" 
+        placeholder="Entrer votre mail"
+        formControlName="email" />
+        </div>
+  
+        <div class="flex flex-column gap-2 mt-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea 
+          id="message"
+          variant="filled"
+          placeholder="Entrer your message"
+          class="ng-invalid ng-dirty"
+          rows="5"
+          cols="20"
+          pInputTextarea 
+          class="form-textarea"
+          formControlName="message"
+        ></textarea>
+        </div>
+  
+      <p class="form-action">
+        <p-button label="Envoyer" icon="pi pi-send" class="send-button" (click)="onSubmit()"></p-button>
+      </p>
+      <p-toast position="bottom-left"  />
+    </p-card>
+  </form>
+  
+ 
+
