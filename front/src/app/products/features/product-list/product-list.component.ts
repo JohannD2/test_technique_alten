@@ -6,7 +6,7 @@ import { ProductFormComponent } from "app/products/ui/product-form/product-form.
 
 import { CartService } from "app/cart/data-access/cart.service";
 
-//priming imports
+// PrimeNG UI components for styling and interactivity
 import { ButtonModule } from "primeng/button";
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
@@ -15,6 +15,7 @@ import { DividerModule } from 'primeng/divider';
 import { SelectItem } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
+// Define an empty product template for initialization
 const emptyProduct: Product = {
   id: 0,
   code: "",
@@ -43,7 +44,7 @@ const emptyProduct: Product = {
 export class ProductListComponent implements OnInit {
   private readonly productsService = inject(ProductsService);
 
-  private cartService = inject(CartService)
+  private cartService = inject(CartService);
 
   public readonly products = this.productsService.products;
 
@@ -51,68 +52,69 @@ export class ProductListComponent implements OnInit {
   public isCreation = false;
   public readonly editedProduct = signal<Product>(emptyProduct);
 
-  
+
   sortOptions!: SelectItem[];
-
   sortOrder!: number;
-
   sortField!: string;
 
-
   ngOnInit() {
+    // Fetch the products list from the service
     this.productsService.get().subscribe();
 
+    // Define sorting options for the product list
     this.sortOptions = [
       { label: 'Price High to Low', value: '!price' },
       { label: 'Price Low to High', value: 'price' }
-  ];
+    ];
   }
 
+  // Handles sorting changes
   onSortChange(event: any) {
     let value = event.value;
 
     if (value.indexOf('!') === 0) {
-        this.sortOrder = -1;
+        this.sortOrder = -1; 
         this.sortField = value.substring(1, value.length);
     } else {
-        this.sortOrder = 1;
+        this.sortOrder = 1; 
         this.sortField = value;
     }
-}
+  }
 
-
+  // Determines the severity
   getSeverity(product: Product) {
-    switch (product.inventoryStatus ) {
+    switch (product.inventoryStatus) {
         case 'INSTOCK':
             return 'success';
-
         case 'LOWSTOCK':
             return 'warning';
-
         case 'OUTOFSTOCK':
             return 'danger';
-
         default:
             return "info";
     }
-}
+  }
 
+  // Opens the product creation dialog
   public onCreate() {
     this.isCreation = true;
     this.isDialogVisible = true;
     this.editedProduct.set(emptyProduct);
   }
 
+  // Opens the product edit dialog
   public onUpdate(product: Product) {
     this.isCreation = false;
     this.isDialogVisible = true;
     this.editedProduct.set(product);
   }
 
+  // Deletes a product by calling the service
   public onDelete(product: Product) {
     this.productsService.delete(product.id).subscribe();
   }
 
+  // Saves the product 
   public onSave(product: Product) {
     if (this.isCreation) {
       this.productsService.create(product).subscribe();
@@ -122,17 +124,18 @@ export class ProductListComponent implements OnInit {
     this.closeDialog();
   }
 
+  // Cancels editing and closes the dialog
   public onCancel() {
     this.closeDialog();
   }
 
+  // Closes dialog window
   private closeDialog() {
     this.isDialogVisible = false;
   }
 
-//add to cart method
-addToCart(product: Product) {
-  this.cartService.addToCart(product)
-}
-
+  // Adds a product to cart
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+  }
 }

@@ -10,7 +10,6 @@ import { ContactService } from './data-access/contact.service';
 
 //primeng imports
 
-
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from "primeng/card";
@@ -39,7 +38,7 @@ export class ContactComponent implements OnInit {
   constructor(private fb: FormBuilder, private contactService: ContactService, private messageService: MessageService) {}
 
   ngOnInit(): void {
-     // Initialize form with controls and validators
+  // Initialize form with controls and validators
        this.contactForm = this.fb.group({
         email: [
           '',
@@ -56,6 +55,7 @@ export class ContactComponent implements OnInit {
        this.messageControl = this.contactForm.get('message') as FormControl;
   }
 
+//toasts
      showSuccess(details: string) {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: details });
     }
@@ -64,7 +64,7 @@ export class ContactComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: details });
   }
 
-
+// submit to service
   onSubmit(): void {
     if(this.contactForm.valid){
     this.isSubmitting = true; 
